@@ -1,0 +1,54 @@
+Describe Block :
+
+    A describe block is used for organizing test cases in logical groups of tests.
+
+Jest Global : 
+
+    In your test files, Jest puts each of these methods and objects into the global environment. You don't have to require or import anything to use them.
+    - Functions: 
+        1. afterAll(fn) 
+        Runs a function after all the tests in this file have completed. If the function returns a promise, Jest waits for that promise to resolve before continuing.
+        This is often useful if you want to clean up some global setup state that is shared across tests.
+
+        2. afterEach(fn)
+        Runs a function after each one of the tests in this file completes. If the function returns a promise, Jest waits for that promise to resolve before continuing.
+        This is often useful if you want to clean up some temporary state that is created by each test.
+
+        3. beforeAll(fn) 
+        Runs a function before any of the tests in this file run. If the function returns a promise, Jest waits for that promise to resolve before running tests.
+        This is often useful if you want to set up some global state that will be used by many tests.
+
+        4. beforeEach(fn) 
+        Runs a function before each of the tests in this file runs. If the function returns a promise, Jest waits for that promise to resolve before running the test.
+        This is often useful if you want to reset some global state that will be used by many tests.    
+
+        5. describe.each(table)(name, fn, timeout)
+        Use describe.each if you keep duplicating the same test suites with different data. describe.each allows you to write the test suite once and pass data in.
+        Ref: https://jestjs.io/docs/api#describeeachtablename-fn-timeout
+
+    - Methods:
+        1. describe.only(name, fn)
+        You can use describe.only if you want to run only one describe block
+
+        2. describe.skip(name, fn)
+        You can use describe.skip if you do not want to run a particular describe block
+
+
+Context Block : 
+
+    Contexts are delimited by describe blocks (you can use context instead of describe ). Within each block you can have multiple before and after blocks, that describe what to do before and after each test.
+
+Ref Link : https://jest-bot.github.io/jest/docs/api.html
+
+beforeAll(() => {
+    console.log("BEFORE ALL");
+  });
+  beforeEach(() => {
+    console.log("BEFORE EACH");
+  });
+  afterAll(() => {
+    console.log("AFTER ALL");
+  });
+  afterEach(() => {
+    console.log("AFTER EACH");
+  });
