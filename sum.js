@@ -46,4 +46,4 @@ function largestDifference(arr) {
 // console.log(fibonacciSequence(3));
 // console.log(makeCapFirstLetter("sjasd sadhj"));
 // console.log(largestDifference([10,2,1,4,5]))
-module.exports = sum;
+module.exports = {sum,makeCapFirstLetter,largestDifference};
