@@ -1,0 +1,22 @@
+import App from "./App";
+import { render, screen } from "./testing/testConfig";
+import { render as newRender } from '@testing-library/react'
+describe("<App />", () => {
+  it("Should render app component", () => {
+    render(<App />);
+  });
+  it("should render preloaded State", () => {
+    render(<App />, {
+      preloadedState: {
+        count: {
+          currentCount: 2,
+        },
+      },
+    });
+
+    expect(screen.getByTestId("current_count")).toHaveTextContent("2");
+  });
+  it("sample",()=>{
+    newRender(<App />)
+  })
+});
