@@ -1,25 +1,15 @@
 {
-  "name": "jest_poc",
+  "name": "jest_learning1",
   "version": "1.0.0",
-  "description": "jest_poc",
-  "main": "test.js",
+  "description": "A simle project to explain how TDD with jest works",
+  "main": "Exmaple.js",
   "scripts": {
-    "test:ts": "jest --config ./jest.config.json",
     "test": "jest",
-    "coverage": "jest --coverage",
-    "start:ts": "node --loader ts-node/esm ./demo.ts"
+    "dev": "jest --watchAll --coverage"
   },
-  "type": "module",
-  "author": "Madhav",
+  "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/preset-env": "^7.24.4",
-    "@babel/preset-typescript": "^7.24.1",
-    "@types/jest": "^29.5.12",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.2"
-  },
-  "dependencies": {
-    "ts-node": "^10.9.2"
+    "jest": "^29.7.0"
   }
 }

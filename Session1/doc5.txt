@@ -1,0 +1,28 @@
+TDD in a nutshell
+
+Understanding the task with OICE ( output, input, constraint, and edge case)
+
+- Test one unit of functionality
+- Pass the test
+- Refactor the code
+
+As test become more specific our code become more generic
+
+Task -> 
+
+The specification is to write a function that takes an string an returns an object of the words and number of times they are used in that string
+
+- Further specification
+    - An empty string would return and empty object
+    - An string must only use english words - punctuations and numbers are not allowed
+    - Words must be lower case
+
+Note: You can use this regex: `/[^ ]+/g` to split a string.
+
+OICE 
+
+Input : String
+Output : object
+Constraints : always a string
+edge case : not now but later string and number would be edge case
+
