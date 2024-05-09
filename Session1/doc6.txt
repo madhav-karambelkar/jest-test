@@ -1,8 +1,0 @@
-Significance of Unit Testing
-
-    - Serves as documentation 
-    - Early detection of bugs
-    - Facilating Refactoring
-    - Regression testing.
-    - Enabling CI / CD 
-    
