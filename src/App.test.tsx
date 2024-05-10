@@ -1,113 +1,177 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import App from './App';
+import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import App from "./App";
+import mainApiService from "./Utilities/API/ApiService";
 
-const consoleSpy = jest.spyOn(console, "log")
+const consoleSpy = jest.spyOn(console, "log");
 
-describe('Renders App Component', ()=>{
-  afterEach(()=>{
-    jest.clearAllMocks()
-  })
+jest.mock("./Utilities/API/ApiService", () => {
+  return {
+    __esModule: true,
+    default: jest.fn(),
+  };
+});
 
-  test('it should render sign up card with text Sign Up Form', () => {
+const apiMockService = mainApiService as any
+
+describe("Renders App Component", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test("it should render sign up card with text Sign Up Form", () => {
     render(<App />);
-    const titleText = screen.getByText('Sign Up Form')
     expect(screen).toBeTruthy();
-    expect(titleText).toBeInTheDocument()
   });
 
-  test('it should render email input inside sign up card with its properties', () => {
+  test("on change of input field it should call the API to get the pokemon data", async () => {
+    render(<App />);
+    apiMockService.mockImplementationOnce(() => {
+      return {
+        data: {
+          height: 10,
+          weight: 85,
+          name: "pikachu",
+          sprites: {
+            front_shiny: "https://www.google.com",
+          },
+          game_indices: [1, 2, 3],
+        },
+      };
+    });
+
+    const inp: any = screen.getByRole('textbox');
+    userEvent.type(inp, "pikachu");
+
+    expect(inp.value).toBe('pikachu')
+
+    const btn: any = screen.getByRole('button', {name: 'Search'});
+    fireEvent.click(btn);
+
+    const name =  await screen.findByText("pikachu");
+    const weight =  await screen.findByText("20 lbs");
+
+    expect(name).toBeInTheDocument();
+    expect(weight).toBeInTheDocument()
+  });
+
+  test("on change it should return error", async () => {
     render(<App />);
 
-    const inp = screen.getByLabelText(/email address/i)
+    apiMockService.mockImplementationOnce(() => {
+      return {
+        error: "No Data Found"
+      }
+    });
+
+    const inp: any = screen.getByRole('textbox');
+    userEvent.type(inp, "pikachu");
+
+    expect(inp.value).toBe('pikachu')
+
+    const btn: any = screen.getByRole('button');
+    fireEvent.click(btn);
+
+    const name =  await screen.findByText("No Data Found");
+
+    expect(name).toBeInTheDocument();
+  });
+
+  test("if click on search without the name it should not call the API", async () => {
+    render(<App />);
+    apiMockService.mockImplementationOnce(() => {
+      return {
+        data: {
+          height: 10,
+          weight: 85,
+          name: "pikachu",
+          sprites: {
+            front_shiny: "https://www.google.com",
+          },
+          game_indices: [1, 2, 3],
+        },
+      };
+    });
+
+    const btn: any = screen.getByRole('button');
+    fireEvent.click(btn);
+
+    expect(apiMockService).toBeCalledTimes(0);
+  });
+});
+
+
+
+// import { fireEvent, render, screen } from "@testing-library/react";
+// import userEvent from "@testing-library/user-event";
+// import axios from "axios";
+// import App from "./App";
+
+// jest.mock("axios", () => jest.fn());
+
+// const axiosMock = axios as any;
+
+// const consoleSpy = jest.spyOn(console, "log");
+
+// describe("Renders App Component", () => {
+//   afterEach(() => {
+//     jest.clearAllMocks();
+//   });
+
+//   test("it should render sign up card with text Sign Up Form", () => {
+//     render(<App />);
+//     expect(screen).toBeTruthy();
+//   });
+
+//   test("on change of input field it should call the API to get the pokemon data", async () => {
+//     render(<App />);
+
+//     axiosMock.mockImplementationOnce(() => {
+//       return {
+//         data: {
+//           height: 10,
+//           weight: 85,
+//           name: "pikachu",
+//           sprites: {
+//             front_shiny: "https://www.google.com",
+//           },
+//           game_indices: [1, 2, 3],
+//         },
+//       };
+//     });
+
+//     const inp: any = screen.getByRole("textbox");
+//     userEvent.type(inp, "pikachu");
+
+//     expect(inp.value).toBe("pikachu");
+
+//     const btn: any = screen.getByRole("button");
+//     fireEvent.click(btn);
+
+//     const name = await screen.findByText("pikachu");
+//     const weight = await screen.findByText("20 lbs");
+
+//     expect(name).toBeInTheDocument();
+//     expect(weight).toBeInTheDocument();
+//   });
+
+//   test("on error", async () => {
+//     render(<App />);
+//     axiosMock.mockRejectedValue(new Error('Not Found'));
+
+
+//     const inp: any = screen.getByRole("textbox");
+//     userEvent.type(inp, "pikachu");
+
+//     expect(inp.value).toBe("pikachu");
+
+//     const btn: any = screen.getByRole("button");
+//     fireEvent.click(btn);
+
+
+//     const error = await screen.findByText(/not found/i);
     
-    expect(inp).toBeInTheDocument()
-    expect(inp).toHaveAttribute('name', 'email')
-    expect(inp).toHaveAttribute('id', 'email')
-    expect(inp).toHaveAttribute('type', 'text')
-    expect(inp).toHaveAttribute('placeholder', 'Email Address')
+//     expect(error).toBeInTheDocument()
 
-  });
-
-  test('it should render fullname input inside sign up card with its properties', () => {
-    render(<App />);
-
-    const inp = screen.getByLabelText('Name')
-
-    expect(inp).toBeInTheDocument()
-    expect(inp).toHaveAttribute('name', 'name')
-    expect(inp).toHaveAttribute('id', 'name')
-    expect(inp).toHaveAttribute('type', 'text')
-    expect(inp).toHaveAttribute('placeholder', 'Full Name')
-    
-  });
-
-  test('it should render password input inside sign up card with its properties', () => {
-    render(<App />);
-
-    const inp = screen.getByLabelText('Password')
-
-    expect(inp).toBeInTheDocument()
-    expect(inp).toHaveAttribute('name', 'password')
-    expect(inp).toHaveAttribute('id', 'password')
-    expect(inp).toHaveAttribute('type', 'password')
-    expect(inp).toHaveAttribute('placeholder', 'Password')
-    
-  });
-
-  test('it should render city input inside sign up card with its properties', () => {
-    render(<App />);
-
-    const inp = screen.getByLabelText('City')
-
-    expect(inp).toBeInTheDocument()
-    expect(inp).toHaveAttribute('name', 'city')
-    expect(inp).toHaveAttribute('id', 'city')
-    expect(inp).toHaveAttribute('type', 'text')
-    expect(inp).toHaveAttribute('placeholder', 'City')
-
-  });
-
-  test('it should render submit button inside sign up card with its properties', () => {
-    render(<App />);
-
-    const btn = screen.getByRole('button')
-
-    expect(btn).toBeInTheDocument()
-    expect(btn).toHaveAttribute('class', 'btn btn-primary w-100 mt-5')
-    expect(btn).toHaveAttribute('type', 'submit')
-  });
-
-  test('it should submit the form while clicking on submit button', () => {
-
-    render(<App />);
-    const btn = screen.getByRole('button', {name: 'Submit'})
-
-    expect(btn).toBeInTheDocument()
-
-    fireEvent.click(btn)
-
-    expect(consoleSpy).toReturn()
-    expect(consoleSpy).toBeCalledWith('Form Submitted')
-    
-  });
-
-  test('it should check on change method', () => {
-
-    render(<App />);
-    const inp: any = screen.getByLabelText('City')
-    fireEvent.change(inp, {target: {value: 'Indore'}})
-    // userEvent.type(inp, 'Indore')
-
-
-    expect(inp.value).toBe('Indore')
-    
-  });
-
-  test('it should match snapshot', () => {
-
-   const {container} = render(<App />);
-   
-   expect(container).toMatchSnapshot()
-    
- });
-})
+//   });
+// });
